@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scripture Journey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="phone-wrap">
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+
+    <!-- ══ LANGUAGE ONBOARDING ══ -->
+    <div class="lang-screen active" id="screen-lang">
+      <div class="lang-cross">✟</div>
+      <div class="lang-app-name">Scripture<br>Journey</div>
+      <div class="lang-tagline">"Your word is a lamp to my feet"</div>
+      <div class="lang-card">
+        <div class="lang-card-title">Choose Your Reading Language</div>
+        <div class="lang-card-sub">You can change this anytime in your profile</div>
+        <div class="lang-options">
+          <div class="lang-opt" id="lopt-en" onclick="selectLang('en')">
+            <span class="lang-flag">🇬🇧</span>
+            <div><div class="lang-opt-name">English</div><div class="lang-opt-script">King James · NIV · ESV</div></div>
+          </div>
+          <div class="lang-opt" id="lopt-te" onclick="selectLang('te')">
+            <span class="lang-flag">🇮🇳</span>
+            <div><div class="lang-opt-name">Telugu · తెలుగు</div><div class="lang-opt-script">తెలుగు బైబిల్</div></div>
+          </div>
+          <div class="lang-opt" id="lopt-both" onclick="selectLang('both')">
+            <span class="lang-flag">🌐</span>
+            <div><div class="lang-opt-name">Both Languages</div><div class="lang-opt-script">English + Telugu side by side</div></div>
+          </div>
+        </div>
+        <button class="lang-continue-btn" id="lang-continue-btn" onclick="goToGoalScreen()">Begin My Journey →</button>
+      </div>
+    </div>
+
+    <!-- ══ GOAL ONBOARDING ══ -->
+    <div class="goal-screen" id="screen-goal">
+      <button class="goal-back" onclick="showScreen('screen-lang')">←</button>
+      <div class="goal-top">
+        <div class="goal-step">Step 2 of 2</div>
+        <div class="goal-title">Set Your Daily<br>Reading Goal</div>
+        <div class="goal-sub">"A little each day fills the soul"</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-opts">
+          <div class="goal-opt" id="gopt-1" onclick="selectGoal(1)">
+            <div class="goal-opt-left"><span class="goal-opt-icon">🌱</span><div><div class="goal-opt-name">1 Chapter</div><div class="goal-opt-desc">Perfect for beginners</div></div></div>
+            <span class="goal-opt-time">5–10 min</span>
+          </div>
+          <div class="goal-opt" id="gopt-3" onclick="selectGoal(3)">
+            <div class="goal-opt-left"><span class="goal-opt-icon">📖</span><div><div class="goal-opt-name">3 Chapters</div><div class="goal-opt-desc">Steady daily reader</div></div></div>
+            <span class="goal-opt-time">15–20 min</span>
+          </div>
+          <div class="goal-opt" id="gopt-5" onclick="selectGoal(5)">
+            <div class="goal-opt-left"><span class="goal-opt-icon">🔥</span><div><div class="goal-opt-name">5 Chapters</div><div class="goal-opt-desc">Committed seeker</div></div></div>
+            <span class="goal-opt-time">30–40 min</span>
+          </div>
+        </div>
+        <div class="custom-row">
+          <span class="custom-label">Custom:</span>
+          <input class="custom-input" type="number" id="custom-goal-input" placeholder="e.g. 2 chapters" min="1" max="20" oninput="selectGoal(parseInt(this.value)||null,true)" />
+        </div>
+        <button class="goal-continue-btn" id="goal-continue-btn" onclick="confirmGoal()">Start My Journey →</button>
+      </div>
+    </div>
+
+    <!-- ══ HOME ══ -->
+    <div class="screen" id="screen-home">
+      <div class="home-header">
+        <div class="home-lang-pill" id="home-lang-pill" onclick="switchNav('stats')">🌐 EN</div>
+        <div class="greeting">Good Morning, Seeker ✦</div>
+        <div class="home-title">Scripture<br>Journey</div>
+        <div class="streak-row">
+          <div class="streak-badge">
+            <span style="font-size:22px">🔥</span>
+            <div><div class="streak-count" id="home-streak">0</div><div class="streak-label">Day Streak</div></div>
+          </div>
+          <div class="xp-badge">
+            <div class="xp-val" id="home-xp">0 XP</div>
+            <div class="xp-label" id="home-level">Level 1 — Seeker</div>
+          </div>
+        </div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-label"><span id="xp-level-lbl">Level 1</span><span id="xp-fraction">0 / 200 XP</span></div>
+        <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+      </div>
+      <div class="home-content">
+        <div class="section-title" style="margin-top:6px">Verse of the Day</div>
+        <div class="verse-card">
+          <div class="verse-text" id="home-verse-en"></div>
+          <div class="verse-text verse-text-te" id="home-verse-te" style="display:none"></div>
+          <div class="verse-ref" id="home-verse-ref"></div>
+        </div>
+        <div class="section-title">This Week</div>
+        <div class="week-grid" id="week-grid"></div>
+        <div class="section-title">Today's Reading</div>
+        <div class="today-banner" id="today-banner" onclick="openTodayReading()">
+          <div class="today-tag" id="today-tag">Day 1 · Old Testament</div>
+          <div class="today-title" id="today-title">In the Beginning</div>
+          <div class="today-ref" id="today-ref">Genesis 1 · Creation</div>
+          <div class="today-meta">
+            <div class="meta-pill" id="today-verses-pill">⏱ ~10 min</div>
+            <div class="meta-pill">❓ 3 questions</div>
+            <div class="meta-pill">⚡ +50 XP</div>
+          </div>
+          <div id="today-action"></div>
+        </div>
+        <div class="section-title">Your Journey</div>
+        <div class="journey-wrap">
+          <div class="journey-header">
+            <div class="journey-title">Reading Plan</div>
+            <div class="journey-progress" id="journey-progress-label">0 / 45 done</div>
+          </div>
+          <div class="journey-path" id="journey-path"></div>
+          <div class="journey-see-all">
+            <button class="see-all-btn" onclick="switchNav('alldays')">See All Days →</button>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchNav('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+        <div class="nav-item" onclick="switchNav('alldays')"><div class="nav-icon">📅</div><div class="nav-label">Plan</div></div>
+        <div class="nav-item" onclick="switchNav('bible')"><div class="nav-icon">✟</div><div class="nav-label">Bible</div></div>
+        <div class="nav-item" onclick="switchNav('stats')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+      </div>
+    </div>
+
+    <!-- ══ ALL DAYS ══ -->
+    <div class="screen" id="screen-alldays">
+      <div class="alldays-header">
+        <button class="back-btn" onclick="goHome()">←</button>
+        <div>
+          <div class="alldays-title">Full Reading Plan</div>
+          <div class="alldays-sub" id="alldays-sub">Day 1 of 45 · Genesis to Revelation</div>
+        </div>
+      </div>
+      <div class="alldays-scroll" id="alldays-body"></div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="switchNav('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+        <div class="nav-item active" onclick="switchNav('alldays')"><div class="nav-icon">📅</div><div class="nav-label">Plan</div></div>
+        <div class="nav-item" onclick="switchNav('bible')"><div class="nav-icon">✟</div><div class="nav-label">Bible</div></div>
+        <div class="nav-item" onclick="switchNav('stats')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- ══ BIBLE BROWSER                        ══ -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-bible">
+
+      <!-- Default: Book list view -->
+      <div id="bible-books-view">
+        <div class="bible-header">
+          <div class="bible-header-top">
+            <div>
+              <div class="bible-header-title">Holy Bible</div>
+              <div class="bible-header-sub" id="bible-header-sub">66 Books · Free Reading</div>
+            </div>
+            <div class="bible-lang-toggle">
+              <button class="blang-btn active-blang" id="blang-en" onclick="setBibleLang('en')">EN</button>
+              <button class="blang-btn" id="blang-te" onclick="setBibleLang('te')">TE</button>
+            </div>
+          </div>
+          <div class="bible-search-wrap">
+            <span class="bible-search-icon">🔍</span>
+            <input class="bible-search-input" id="bible-search" type="text" placeholder="Search book…" oninput="filterBibleBooks(this.value)" />
+          </div>
+        </div>
+        <div class="bible-tabs">
+          <button class="bible-tab active-btab" id="btab-ot" onclick="setBibleTab('ot')">Old Testament · 39</button>
+          <button class="bible-tab" id="btab-nt" onclick="setBibleTab('nt')">New Testament · 27</button>
+        </div>
+        <div class="bible-scroll" id="bible-book-list"></div>
+      </div>
+
+      <!-- Chapter picker (slides in when a book is selected) -->
+      <div id="bible-chapters-view" style="display:none; flex-direction:column; flex:1;">
+        <div class="bcp-header">
+          <button class="bcp-back" onclick="closeBibleChapterPicker()">←</button>
+          <div style="flex:1">
+            <div class="bcp-book-name" id="bcp-book-name">Genesis</div>
+            <div class="bcp-book-sub" id="bcp-book-sub">50 chapters</div>
+          </div>
+          <div class="bcp-lang-tag" id="bcp-lang-tag">EN</div>
+        </div>
+        <div class="bcp-grid-wrap">
+          <div class="bcp-grid" id="bcp-grid"></div>
+        </div>
+      </div>
+
+      <!-- Free reading view (slides in when a chapter is selected) -->
+      <div id="bible-read-view" style="display:none; flex-direction:column; flex:1;">
+        <div class="bfr-header">
+          <button class="bcp-back" onclick="closeBibleFreeRead()">←</button>
+          <div class="bfr-title-wrap">
+            <div class="bfr-title" id="bfr-title">Genesis 1</div>
+            <div class="bfr-sub" id="bfr-sub">Free Reading</div>
+          </div>
+          <div class="bfr-chap-nav">
+            <button class="bfr-nav-btn" id="bfr-prev" onclick="bfrNavigate(-1)">‹</button>
+            <button class="bfr-nav-btn" id="bfr-next" onclick="bfrNavigate(1)">›</button>
+          </div>
+        </div>
+        <div class="bfr-toolbar">
+          <div class="bfr-lang-tabs">
+            <button class="bfr-lang-tab active-bfr-tab" id="bfr-tab-en" onclick="setBfrLang('en')">English</button>
+            <button class="bfr-lang-tab" id="bfr-tab-te" onclick="setBfrLang('te')">తెలుగు</button>
+          </div>
+          <div class="bfr-font-btns">
+            <button class="bfr-font-btn" onclick="bfrFontSize(-1)">A−</button>
+            <button class="bfr-font-btn" onclick="bfrFontSize(1)">A+</button>
+          </div>
+        </div>
+        <div class="bfr-body" id="bfr-body"></div>
+        <!-- Quick add to today button -->
+        <div class="bfr-footer">
+          <button class="bfr-read-btn" id="bfr-journey-btn" onclick="bfrStartJourneyRead()">
+            📖 Read as Journey Chapter
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="switchNav('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+        <div class="nav-item" onclick="switchNav('alldays')"><div class="nav-icon">📅</div><div class="nav-label">Plan</div></div>
+        <div class="nav-item active" onclick="switchNav('bible')"><div class="nav-icon">✟</div><div class="nav-label">Bible</div></div>
+        <div class="nav-item" onclick="switchNav('stats')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+      </div>
+    </div>
+
+    <!-- ══ READING (Journey) ══ -->
+    <div class="screen" id="screen-reading">
+      <div class="reading-header">
+        <button class="back-btn" onclick="goHome()">←</button>
+        <div class="reading-title-wrap">
+          <div class="reading-chapter" id="reading-chapter-title">Genesis 1</div>
+          <div class="reading-book" id="reading-book-sub">In the Beginning</div>
+        </div>
+        <div class="lang-tag" id="reading-lang-tag">EN</div>
+      </div>
+      <div class="timer-bar-wrap">
+        <div class="timer-row">
+          <div>
+            <div class="timer-label-top">Reading Timer</div>
+            <div class="timer-display" id="timer-display">0:00</div>
+          </div>
+          <div class="timer-controls">
+            <button class="timer-btn" id="timer-toggle-btn" onclick="toggleTimer()">▶ Start</button>
+            <button class="timer-btn" onclick="resetTimer()">↺ Reset</button>
+          </div>
+        </div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:0%"></div></div>
+      </div>
+      <div class="reading-body" id="reading-scroll" onscroll="updateReadingProgress()">
+        <div class="lang-toggle" id="lang-toggle-tabs">
+          <button class="lang-tab active-tab" id="tab-en" onclick="switchReadingLang('en')">English</button>
+          <button class="lang-tab" id="tab-te" onclick="switchReadingLang('te')">తెలుగు</button>
+        </div>
+        <div id="passage-en"></div>
+        <div id="passage-te" style="display:none"></div>
+      </div>
+      <div class="reading-footer">
+        <div class="progress-label"><span>Reading progress</span><span id="progress-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <button class="done-btn" onclick="finishReading()">I've Finished Reading → Take Quiz</button>
+      </div>
+    </div>
+
+    <!-- ══ QUIZ ══ -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="quiz-header-row">
+          <div class="quiz-label">Comprehension Quiz</div>
+          <div class="quiz-q-counter" id="quiz-q-label">Q1 / 3</div>
+        </div>
+        <div class="quiz-chapter-label" id="quiz-chapter-label">Genesis 1</div>
+        <div class="quiz-progress-row" id="quiz-dots"></div>
+      </div>
+      <div class="quiz-body">
+        <div class="question-card">
+          <div class="q-num" id="q-num-label">QUESTION 1</div>
+          <div class="q-text" id="q-text"></div>
+        </div>
+        <div class="options" id="options-wrap"></div>
+        <div class="result-banner" id="result-banner"></div>
+        <button class="next-q-btn" id="next-btn" onclick="nextQuestion()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══ SCORE ══ -->
+    <div class="score-screen" id="screen-score">
+      <div id="confetti-container" class="confetti-container"></div>
+      <div class="score-trophy" id="score-trophy">🏆</div>
+      <div class="score-title">Chapter Complete!</div>
+      <div class="score-sub" id="score-sub-text">"Well done, good and faithful servant."</div>
+      <div class="score-grid">
+        <div class="score-stat"><div class="score-stat-val" id="final-correct">3/3</div><div class="score-stat-label">Correct</div></div>
+        <div class="score-stat"><div class="score-stat-val" id="final-streak-val">1🔥</div><div class="score-stat-label">Day Streak</div></div>
+        <div class="score-stat"><div class="score-stat-val" id="final-time">—</div><div class="score-stat-label">Reading Time</div></div>
+        <div class="score-stat"><div class="score-stat-val" id="final-day">Day 1</div><div class="score-stat-label">Completed</div></div>
+      </div>
+      <div class="xp-reward">
+        <div class="xp-reward-label">⚡ XP EARNED</div>
+        <div class="xp-reward-val" id="xp-earned-val">+50 XP</div>
+        <div class="xp-reward-sub" id="xp-breakdown">Reading + Quiz bonus</div>
+      </div>
+      <button class="home-again-btn" onclick="goHome()">Continue Journey 🏠</button>
+      <button class="share-btn" onclick="alert('Share feature coming soon!')">Share Achievement ↗</button>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="screen" id="screen-stats">
+      <div class="stats-header">
+        <div class="stats-avatar">✦</div>
+        <div class="stats-name">Daily Seeker</div>
+        <div class="stats-level" id="stats-level-label">Level 1 — Seeker · 0 XP</div>
+      </div>
+      <div class="stats-body">
+        <div class="section-title" style="margin-top:2px">Your Progress</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-card-val" id="st-streak">0</div><div class="stat-card-label">Day Streak 🔥</div></div>
+          <div class="stat-card"><div class="stat-card-val" id="st-days">0</div><div class="stat-card-label">Days Done 📖</div></div>
+          <div class="stat-card"><div class="stat-card-val" id="st-xp">0</div><div class="stat-card-label">Total XP ⚡</div></div>
+          <div class="stat-card"><div class="stat-card-val" id="st-pct">0%</div><div class="stat-card-label">Plan Progress</div></div>
+        </div>
+        <div class="lang-setting-card">
+          <div class="lang-setting-title">📖 Reading Language</div>
+          <div class="lang-setting-opts">
+            <div class="lang-setting-row" id="lset-en" onclick="changeLang('en')"><span class="lang-setting-flag">🇬🇧</span><span class="lang-setting-name">English</span><div class="lang-setting-check">✓</div></div>
+            <div class="lang-setting-row" id="lset-te" onclick="changeLang('te')"><span class="lang-setting-flag">🇮🇳</span><span class="lang-setting-name">Telugu · తెలుగు</span><div class="lang-setting-check">✓</div></div>
+            <div class="lang-setting-row" id="lset-both" onclick="changeLang('both')"><span class="lang-setting-flag">🌐</span><span class="lang-setting-name">Both Languages</span><div class="lang-setting-check">✓</div></div>
+          </div>
+        </div>
+        <div class="section-title">Earned Badges</div>
+        <div class="badges-row" id="badges-wrap"></div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="switchNav('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+        <div class="nav-item" onclick="switchNav('alldays')"><div class="nav-icon">📅</div><div class="nav-label">Plan</div></div>
+        <div class="nav-item" onclick="switchNav('bible')"><div class="nav-icon">✟</div><div class="nav-label">Bible</div></div>
+        <div class="nav-item active" onclick="switchNav('stats')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+      </div>
+    </div>
+
+  </div><!-- /phone -->
+</div><!-- /phone-wrap -->
+
+<script src="app.js"></script>
+</body>
+</html>
